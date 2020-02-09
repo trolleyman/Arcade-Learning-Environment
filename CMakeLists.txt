@@ -161,6 +161,7 @@ endif()
 
 if(BUILD_C_LIB)
   add_library(ale-c-lib SHARED ${CMAKE_CURRENT_SOURCE_DIR}/ale_py/ale_c_wrapper.cpp ${SOURCE_DIR}/ale_interface.cpp ${SOURCES})
+  add_library(ale-c-lib-static STATIC ${CMAKE_CURRENT_SOURCE_DIR}/ale_py/ale_c_wrapper.cpp ${SOURCE_DIR}/ale_interface.cpp ${SOURCES})
   set_target_properties(ale-c-lib PROPERTIES OUTPUT_NAME ale_c)
   set_target_properties(ale-c-lib PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ale_py)
   if(PYTHON_MODULE_EXTENSION)
