@@ -18,10 +18,6 @@ endif()
 
 add_definitions(-DHAVE_INTTYPES)
 
-find_package(ZLIB REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIRS})
-list(APPEND LINK_LIBS ${ZLIB_LIBRARIES})
-
 if(USE_RLGLUE)
   add_definitions(-D__USE_RLGLUE)
   list(APPEND LINK_LIBS rlutils rlgluenetdev)
@@ -49,7 +45,7 @@ if(USE_SDL)
 endif()
 
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(MODULES common controllers emucore emucore/m6502/src emucore/m6502/src/bspf/src environment games games/supported external external/TinyMT)
+set(MODULES common controllers emucore emucore/m6502/src emucore/m6502/src/bspf/src environment games games/supported external external/TinyMT external/zlib)
 
 foreach(module ${MODULES})
   file(GLOB module_sources ${SOURCE_DIR}/${module}/*.c)
@@ -133,6 +129,7 @@ include_directories(
   ${SOURCE_DIR}/os_dependent
   ${SOURCE_DIR}/external
   ${SOURCE_DIR}/external/TinyMT
+  ${SOURCE_DIR}/external/zlib
 )
 
 if(NOT BUILD_CPP_LIB AND BUILD_EXAMPLES)

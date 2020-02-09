@@ -30,3 +30,6 @@ doc/examples/*Example
 
 # Python
 *.pyc
+
+# CMake
+CMakeFiles
