@@ -128,10 +128,17 @@ bool OSystem::create()
   // Create the event handler for the system
   //ALE   myEventHandler = new EventHandler(this);
   //ALE  myEventHandler->initialize();
-  
   // Create the streamer used for accessing eventstreams/recordings
+
+  // Delete the previous event object (if any).
+  delete myEvent;
+
   // Create the event object which will be used for this handler
   myEvent = new Event();
+
+  // Delete the previous properties set (if any).
+  delete myPropSet;
+
   // Create a properties set for us to use and set it up
   myPropSet = new PropertiesSet(this);
 
@@ -368,13 +375,13 @@ bool OSystem::createConsole(const string& romfile)
     myRomFile = romfile;
 
   // Open the cartridge image and read it in
-  uInt8* image;
+  uInt8* image = nullptr;
   int size = -1;
   string md5;
   if(openROM(myRomFile, md5, &image, &size))
   {
     // Get all required info for creating a valid console
-    Cartridge* cart = (Cartridge*) NULL;
+    Cartridge* cart = nullptr;
     Properties props;
     if(queryConsoleInfo(image, size, md5, &cart, props))
     {
@@ -421,9 +428,8 @@ bool OSystem::createConsole(const string& romfile)
   }
 
   // Free the image since we don't need it any longer
-  if(size != -1) {
-    delete[] image;
-  }
+  delete[] image;
+
   if (mySettings->getBool("display_screen", true)) {
 #ifndef __USE_SDL
     ale::Logger::Error << "Screen display requires directive __USE_SDL to be defined."
@@ -527,30 +533,26 @@ string OSystem::getROMInfo(const string& romfile)
   ostringstream buf;
 
   // Open the cartridge image and read it in
-  uInt8* image;
+  uInt8* image = nullptr;
   int size = -1;
   string md5;
   if(openROM(romfile, md5, &image, &size))
   {
     // Get all required info for creating a temporary console
-    Cartridge* cart = (Cartridge*) NULL;
+    Cartridge* cart = nullptr;
     Properties props;
     if(queryConsoleInfo(image, size, md5, &cart, props))
     {
       Console* console = new Console(this, cart, props);
-      if(console)
-        buf << console->about();
-      else
-        buf << "ERROR: Couldn't get ROM info for " << romfile << " ..." << endl;
-
+      buf << console->about();
       delete console;
     }
     else
       buf << "ERROR: Couldn't open " << romfile << " ..." << endl;
   }
+
   // Free the image and console since we don't need it any longer
-  if(size != -1)
-    delete[] image;
+  delete[] image;
 
   return buf.str();
 }

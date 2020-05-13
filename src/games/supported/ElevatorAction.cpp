@@ -35,9 +35,7 @@ ElevatorActionSettings::ElevatorActionSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* ElevatorActionSettings::clone() const {
-  RomSettings* rval = new ElevatorActionSettings();
-  *rval = *this;
-  return rval;
+  return new ElevatorActionSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -111,10 +109,7 @@ void ElevatorActionSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect ElevatorActionSettings::getStartingActions() {
-  ActionVect startingActions;
-  for (int i = 0; i < 16; i++)
-    startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return ActionVect(16, PLAYER_A_FIRE);
 }
 
 }  // namespace ale

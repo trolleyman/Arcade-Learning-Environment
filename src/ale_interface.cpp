@@ -60,15 +60,6 @@ std::string ALEInterface::welcomeMessage() {
   return oss.str();
 }
 
-void ALEInterface::disableBufferedIO() {
-  setvbuf(stdout, NULL, _IONBF, 0);
-  setvbuf(stdin, NULL, _IONBF, 0);
-  std::cin.rdbuf()->pubsetbuf(0, 0);
-  std::cout.rdbuf()->pubsetbuf(0, 0);
-  std::cin.sync_with_stdio();
-  std::cout.sync_with_stdio();
-}
-
 void ALEInterface::createOSystem(std::unique_ptr<OSystem>& theOSystem,
                                  std::unique_ptr<Settings>& theSettings) {
 #if (defined(WIN32) || defined(__MINGW32__))
@@ -82,8 +73,7 @@ void ALEInterface::createOSystem(std::unique_ptr<OSystem>& theOSystem,
   theOSystem->settings().loadConfig();
 }
 
-bool ALEInterface::isSupportedRom(
-    std::unique_ptr<OSystem>& theOSystem) {
+bool ALEInterface::isSupportedRom(std::unique_ptr<OSystem>& theOSystem) {
   const Properties properties = theOSystem->console().properties();
   const std::string md5 = properties.get(Cartridge_MD5);
   bool found = false;
@@ -112,12 +102,12 @@ void ALEInterface::loadSettings(const std::string& romfile,
   theOSystem->create();
 
   // Attempt to load the ROM
-  if (romfile == "") {
+  if (romfile.empty()) {
     Logger::Error << "No ROM File specified." << std::endl;
-    exit(1);
+    std::exit(1);
   } else if (!FilesystemNode::fileExists(romfile)) {
     Logger::Error << "ROM file " << romfile << " not found." << std::endl;
-    exit(1);
+    std::exit(1);
   } else if (theOSystem->createConsole(romfile)) {
     if (!isSupportedRom(theOSystem)) {
       const Properties properties = theOSystem->console().properties();
@@ -136,7 +126,7 @@ void ALEInterface::loadSettings(const std::string& romfile,
     theOSystem->settings().setString("rom_file", romfile);
   } else {
     Logger::Error << "Unable to create console for " << romfile << std::endl;
-    exit(1);
+    std::exit(1);
   }
 
   // Must force the resetting of the OSystem's random seed, which is set before we change
@@ -150,13 +140,11 @@ void ALEInterface::loadSettings(const std::string& romfile,
 }
 
 ALEInterface::ALEInterface() {
-  disableBufferedIO();
   Logger::Info << welcomeMessage() << std::endl;
   createOSystem(theOSystem, theSettings);
 }
 
 ALEInterface::ALEInterface(bool display_screen) {
-  disableBufferedIO();
   Logger::Info << welcomeMessage() << std::endl;
   createOSystem(theOSystem, theSettings);
   this->setBool("display_screen", display_screen);
@@ -166,19 +154,21 @@ ALEInterface::~ALEInterface() {}
 
 // Loads and initializes a game. After this call the game should be
 // ready to play. Resets the OSystem/Console/Environment/etc. This is
-// necessary after changing a setting. Optionally specify a new rom to
-// load.
-void ALEInterface::loadROM(std::string rom_file = "") {
+// necessary after changing a setting.
+void ALEInterface::loadROM(std::string rom_file) {
   assert(theOSystem.get());
   if (rom_file.empty()) {
     rom_file = theOSystem->romFile();
   }
-  loadSettings(rom_file, theOSystem);
 
   RomSettings* wrapper = buildRomRLWrapper(rom_file);
   if (wrapper == NULL) {
     Logger::Error << std::endl
       << "Attempt to wrap ROM " << rom_file << " failed." << std::endl;
+
+    // We need to load the settings now to make the isSupportedRom check work;
+    // the check needs the console (and its properties) to be initialized.
+    loadSettings(rom_file, theOSystem);
 
     if (isSupportedRom(theOSystem)) {
       Logger::Error << "It seems the ROM is supported." << std::endl;
@@ -195,13 +185,23 @@ void ALEInterface::loadROM(std::string rom_file = "") {
       << "ROM files should be named using snake case, "
       << "e.g., space_invaders.bin" << std::endl;
 
-    exit(1);
+    std::exit(1);
   }
 
   romSettings.reset(wrapper);
+
+  // Custom environment settings required for a specific ROM must be added
+  // before the StellaEnvironment is constructed.
+  romSettings->modifyEnvironmentSettings(theOSystem->settings());
+
+  // Load all settings corresponding to the ROM file and create a new game
+  // console, with attached devices, capable of emulating the ROM.
+  loadSettings(rom_file, theOSystem);
+
   environment.reset(new StellaEnvironment(theOSystem.get(), romSettings.get()));
   max_num_frames = theOSystem->settings().getInt("max_num_frames_per_episode");
   environment->reset();
+
 #ifndef __USE_SDL
   if (theOSystem->p_display_screen != NULL) {
     Logger::Error
@@ -212,7 +212,7 @@ void ALEInterface::loadROM(std::string rom_file = "") {
     Logger::Error << "Also ensure ALE has been compiled with USE_SDL active "
                      "(see ALE makefile)."
                   << std::endl;
-    exit(1);
+    std::exit(1);
   }
 #endif
 }
@@ -269,10 +269,11 @@ bool ALEInterface::game_over() const { return environment->isTerminal(); }
 
 // The remaining number of lives.
 int ALEInterface::lives() {
-  if (!romSettings.get()) {
+  if (romSettings == nullptr) {
     throw std::runtime_error("ROM not set");
+  } else {
+    return romSettings->lives();
   }
-  return romSettings->lives();
 }
 
 // Applies an action to the game and returns the reward. It is the
@@ -332,19 +333,21 @@ void ALEInterface::setDifficulty(difficulty_t m) {
 // Returns the vector of legal actions. This should be called only
 // after the rom is loaded.
 ActionVect ALEInterface::getLegalActionSet() {
-  if (!romSettings.get()) {
+  if (romSettings == nullptr) {
     throw std::runtime_error("ROM not set");
+  } else {
+    return romSettings->getAllActions();
   }
-  return romSettings->getAllActions();
 }
 
 // Returns the vector of the minimal set of actions needed to play
 // the game.
 ActionVect ALEInterface::getMinimalActionSet() {
-  if (!romSettings.get()) {
+  if (romSettings == nullptr) {
     throw std::runtime_error("ROM not set");
+  } else {
+    return romSettings->getMinimalActionSet();
   }
-  return romSettings->getMinimalActionSet();
 }
 
 // Returns the frame number since the loading of the ROM

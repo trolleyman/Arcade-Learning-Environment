@@ -20,9 +20,7 @@ PongSettings::PongSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* PongSettings::clone() const {
-  RomSettings* rval = new PongSettings();
-  *rval = *this;
-  return rval;
+  return new PongSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -110,9 +108,10 @@ void PongSettings::setMode(
   }
 }
 
+// The left difficulty switch sets the width of the CPU opponent's bat.
+// The right difficulty switch sets the width of the player's bat.
 DifficultyVect PongSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1, 2, 3};
 }
 
 }  // namespace ale

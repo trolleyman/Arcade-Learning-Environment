@@ -35,9 +35,7 @@ BreakoutSettings::BreakoutSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* BreakoutSettings::clone() const {
-  RomSettings* rval = new BreakoutSettings();
-  *rval = *this;
-  return rval;
+  return new BreakoutSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -134,8 +132,7 @@ void BreakoutSettings::setMode(
 }
 
 DifficultyVect BreakoutSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

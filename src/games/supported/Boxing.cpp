@@ -20,9 +20,7 @@ BoxingSettings::BoxingSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* BoxingSettings::clone() const {
-  RomSettings* rval = new BoxingSettings();
-  *rval = *this;
-  return rval;
+  return new BoxingSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -107,8 +105,7 @@ void BoxingSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect BoxingSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1, 2, 3};
-  return diff;
+  return {0, 1, 2, 3};
 }
 
 }  // namespace ale

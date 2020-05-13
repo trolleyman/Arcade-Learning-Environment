@@ -35,9 +35,7 @@ TutankhamSettings::TutankhamSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* TutankhamSettings::clone() const {
-  RomSettings* rval = new TutankhamSettings();
-  *rval = *this;
-  return rval;
+  return new TutankhamSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -107,8 +105,7 @@ void TutankhamSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect TutankhamSettings::getAvailableModes() {
-  ModeVect modes = {0, 4, 8, 12};
-  return modes;
+  return {0, 4, 8, 12};
 }
 
 // set the mode of the game

@@ -34,9 +34,7 @@ AdventureSettings::AdventureSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* AdventureSettings::clone() const {
-  RomSettings* rval = new AdventureSettings();
-  *rval = *this;
-  return rval;
+  return new AdventureSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -107,7 +105,7 @@ void AdventureSettings::loadState(Deserializer& ser) {
 
 // Returns the supported modes for the game.
 ModeVect AdventureSettings::getAvailableModes() {
-  return ModeVect() = {0, 1, 2};
+  return {0, 1, 2};
 }
 
 // Set the game mode.
@@ -121,19 +119,24 @@ ModeVect AdventureSettings::getAvailableModes() {
 // Level 3 is similar to Level 2, but the location of the objects is
 //   randomized to provide a more challenging game. The randomiser uses the
 //   low byte of its internal frame counter at RAM address 0xE5 to seed the rng.
-//   Due to the way game modes are set below this will always be the same value
-//   at present so only 1/256 randomised configuration is available.
+//   We press select for a random amount of time to enable different layouts to
+//   be generated.
 void AdventureSettings::setMode(
     game_mode_t m, System& system,
     std::unique_ptr<StellaEnvironmentWrapper> environment) {
   if (m < 3) {
+    Random& rng = environment->getSystemRng();
     // Read the mode we are currently in.
     unsigned char mode = (readRam(&system, 0xDD) >> 1) & 0x03;
+
     // Press select until the correct mode is reached.
     while (mode != m) {
-      environment->pressSelect(2);
-      // Adventure uses a debouncer so need to wait before the select
-      // take effect.
+      // Press select for a random amount of time as the randomiser for level 3
+      // uses the 1 byte elapsed frame counter at RAM address 0xE5 as a seed for
+      // its internal rng used to configure the object spawning in rooms.
+      environment->pressSelect(2 + rng.next() % 256);
+      // Adventure uses a debouncer so need to wait before the select takes
+      // effect.
       environment->act(PLAYER_A_NOOP, PLAYER_B_NOOP);
       mode = (readRam(&system, 0xDD) >> 1) & 0x03;
     }
@@ -149,7 +152,7 @@ void AdventureSettings::setMode(
 // one difficulty switch controls controls the dragons' bite speed, and one
 // causes them to flee when the player is wielding the sword.
 DifficultyVect AdventureSettings::getAvailableDifficulties() {
-  return DifficultyVect() = {0, 1, 2, 3};
+  return {0, 1, 2, 3};
 }
 
 }  // namespace ale

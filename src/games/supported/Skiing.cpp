@@ -20,9 +20,7 @@ SkiingSettings::SkiingSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* SkiingSettings::clone() const {
-  RomSettings* rval = new SkiingSettings();
-  *rval = *this;
-  return rval;
+  return new SkiingSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -98,10 +96,7 @@ void SkiingSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect SkiingSettings::getStartingActions() {
-  ActionVect startingActions;
-  for (int i = 0; i < 16; i++)
-    startingActions.push_back(PLAYER_A_DOWN);
-  return startingActions;
+  return ActionVect(16, PLAYER_A_DOWN);
 }
 
 }  // namespace ale

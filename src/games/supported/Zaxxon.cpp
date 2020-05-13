@@ -35,9 +35,7 @@ ZaxxonSettings::ZaxxonSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* ZaxxonSettings::clone() const {
-  RomSettings* rval = new ZaxxonSettings();
-  *rval = *this;
-  return rval;
+  return new ZaxxonSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -117,8 +115,7 @@ void ZaxxonSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect ZaxxonSettings::getAvailableModes() {
-  ModeVect modes = {0, 8, 16, 24};
-  return modes;
+  return {0, 8, 16, 24};
 }
 
 // set the mode of the game

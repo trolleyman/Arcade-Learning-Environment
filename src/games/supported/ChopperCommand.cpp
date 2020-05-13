@@ -35,9 +35,7 @@ ChopperCommandSettings::ChopperCommandSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* ChopperCommandSettings::clone() const {
-  RomSettings* rval = new ChopperCommandSettings();
-  *rval = *this;
-  return rval;
+  return new ChopperCommandSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -116,8 +114,7 @@ void ChopperCommandSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect ChopperCommandSettings::getAvailableModes() {
-  ModeVect modes = {0, 2};
-  return modes;
+  return {0, 2};
 }
 
 // set the mode of the game
@@ -141,8 +138,7 @@ void ChopperCommandSettings::setMode(
 }
 
 DifficultyVect ChopperCommandSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

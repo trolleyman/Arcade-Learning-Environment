@@ -35,9 +35,7 @@ TimePilotSettings::TimePilotSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* TimePilotSettings::clone() const {
-  RomSettings* rval = new TimePilotSettings();
-  *rval = *this;
-  return rval;
+  return new TimePilotSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -109,8 +107,7 @@ void TimePilotSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect TimePilotSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1, 2};
-  return diff;
+  return {0, 1, 2};
 }
 
 }  // namespace ale

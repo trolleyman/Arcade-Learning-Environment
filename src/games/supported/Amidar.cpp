@@ -35,9 +35,7 @@ AmidarSettings::AmidarSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* AmidarSettings::clone() const {
-  RomSettings* rval = new AmidarSettings();
-  *rval = *this;
-  return rval;
+  return new AmidarSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -106,8 +104,7 @@ void AmidarSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect AmidarSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 3};
-  return diff;
+  return {0, 3};
 }
 
 }  // namespace ale

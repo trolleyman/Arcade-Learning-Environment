@@ -20,9 +20,7 @@ TrondeadSettings::TrondeadSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* TrondeadSettings::clone() const {
-  RomSettings* rval = new TrondeadSettings();
-  *rval = *this;
-  return rval;
+  return new TrondeadSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -94,6 +92,12 @@ void TrondeadSettings::loadState(Deserializer& ser) {
   m_score = ser.getInt();
   m_terminal = ser.getBool();
   m_lives = ser.getInt();
+}
+
+// According to https://atariage.com/manual_html_page.php?SoftwareLabelID=569
+// the left difficulty switch sets the speed of the game.
+DifficultyVect TrondeadSettings::getAvailableDifficulties() {
+  return {0, 1};
 }
 
 }  // namespace ale

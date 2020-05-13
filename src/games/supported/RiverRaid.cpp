@@ -48,9 +48,7 @@ RiverRaidSettings::RiverRaidSettings() {
 
 /* create a new instance of the rom */
 RomSettings* RiverRaidSettings::clone() const {
-  RomSettings* rval = new RiverRaidSettings();
-  *rval = *this;
-  return rval;
+  return new RiverRaidSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -145,8 +143,7 @@ void RiverRaidSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect RiverRaidSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

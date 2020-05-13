@@ -35,9 +35,7 @@ KangarooSettings::KangarooSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* KangarooSettings::clone() const {
-  RomSettings* rval = new KangarooSettings();
-  *rval = *this;
-  return rval;
+  return new KangarooSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -114,8 +112,7 @@ void KangarooSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect KangarooSettings::getAvailableModes() {
-  ModeVect modes = {0, 1};
-  return modes;
+  return {0, 1};
 }
 
 // set the mode of the game

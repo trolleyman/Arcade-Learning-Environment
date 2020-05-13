@@ -35,9 +35,7 @@ UpNDownSettings::UpNDownSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* UpNDownSettings::clone() const {
-  RomSettings* rval = new UpNDownSettings();
-  *rval = *this;
-  return rval;
+  return new UpNDownSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -102,14 +100,11 @@ void UpNDownSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect UpNDownSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
 }
 
 DifficultyVect UpNDownSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1, 2, 3};
-  return diff;
+  return {0, 1, 2, 3};
 }
 
 }  // namespace ale

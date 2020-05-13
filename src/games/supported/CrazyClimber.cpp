@@ -35,9 +35,7 @@ CrazyClimberSettings::CrazyClimberSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* CrazyClimberSettings::clone() const {
-  RomSettings* rval = new CrazyClimberSettings();
-  *rval = *this;
-  return rval;
+  return new CrazyClimberSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -141,8 +139,7 @@ void CrazyClimberSettings::setMode(
 }
 
 DifficultyVect CrazyClimberSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

@@ -49,7 +49,9 @@ class TrondeadSettings : public RomSettings {
   // loads the state of the rom settings
   void loadState(Deserializer& ser) override;
 
-  virtual int lives() { return isTerminal() ? 0 : m_lives; }
+  int lives() override { return isTerminal() ? 0 : m_lives; }
+
+  DifficultyVect getAvailableDifficulties() override;
 
  private:
   bool m_terminal;

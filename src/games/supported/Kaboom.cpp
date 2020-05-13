@@ -22,9 +22,7 @@ KaboomSettings::KaboomSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* KaboomSettings::clone() const {
-  RomSettings* rval = new KaboomSettings();
-  *rval = *this;
-  return rval;
+  return new KaboomSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -80,9 +78,7 @@ void KaboomSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect KaboomSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
 }
 
 }  // namespace ale

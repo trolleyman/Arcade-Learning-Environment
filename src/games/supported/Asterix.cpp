@@ -35,9 +35,7 @@ AsterixSettings::AsterixSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* AsterixSettings::clone() const {
-  RomSettings* rval = new AsterixSettings();
-  *rval = *this;
-  return rval;
+  return new AsterixSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -106,9 +104,7 @@ void AsterixSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect AsterixSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
 }
 
 }  // namespace ale

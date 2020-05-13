@@ -20,9 +20,7 @@ DoubleDunkSettings::DoubleDunkSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* DoubleDunkSettings::clone() const {
-  RomSettings* rval = new DoubleDunkSettings();
-  *rval = *this;
-  return rval;
+  return new DoubleDunkSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -94,9 +92,7 @@ void DoubleDunkSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect DoubleDunkSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_UPFIRE);
-  return startingActions;
+  return {PLAYER_A_UPFIRE};
 }
 
 // returns a list of mode that the game can be played in
@@ -115,7 +111,7 @@ void DoubleDunkSettings::goDown(
     System& system, std::unique_ptr<StellaEnvironmentWrapper>& environment) {
   // this game has a menu that allows to define various yes/no options
   // this function goes to the next option in the menu
-  unsigned int previousSelection = readRam(&system, 0xB0);
+  int previousSelection = readRam(&system, 0xB0);
   while (previousSelection == readRam(&system, 0xB0)) {
     environment->act(PLAYER_A_DOWN, PLAYER_B_NOOP);
     environment->act(PLAYER_A_NOOP, PLAYER_B_NOOP);

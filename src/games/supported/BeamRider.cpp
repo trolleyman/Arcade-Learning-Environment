@@ -35,9 +35,7 @@ BeamRiderSettings::BeamRiderSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* BeamRiderSettings::clone() const {
-  RomSettings* rval = new BeamRiderSettings();
-  *rval = *this;
-  return rval;
+  return new BeamRiderSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -112,14 +110,11 @@ void BeamRiderSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect BeamRiderSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_RIGHT);
-  return startingActions;
+  return {PLAYER_A_RIGHT};
 }
 
 DifficultyVect BeamRiderSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

@@ -35,9 +35,7 @@ PitfallSettings::PitfallSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* PitfallSettings::clone() const {
-  RomSettings* rval = new PitfallSettings();
-  *rval = *this;
-  return rval;
+  return new PitfallSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -115,9 +113,7 @@ void PitfallSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect PitfallSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_UP);
-  return startingActions;
+  return {PLAYER_A_UP};
 }
 
 }  // namespace ale
