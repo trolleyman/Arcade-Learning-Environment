@@ -35,9 +35,7 @@ SeaquestSettings::SeaquestSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* SeaquestSettings::clone() const {
-  RomSettings* rval = new SeaquestSettings();
-  *rval = *this;
-  return rval;
+  return new SeaquestSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -110,8 +108,7 @@ void SeaquestSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect SeaquestSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

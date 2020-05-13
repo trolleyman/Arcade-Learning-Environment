@@ -35,9 +35,7 @@ QBertSettings::QBertSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* QBertSettings::clone() const {
-  RomSettings* rval = new QBertSettings();
-  *rval = *this;
-  return rval;
+  return new QBertSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -119,8 +117,7 @@ void QBertSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect QBertSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

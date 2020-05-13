@@ -20,9 +20,7 @@ TurmoilSettings::TurmoilSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* TurmoilSettings::clone() const {
-  RomSettings* rval = new TurmoilSettings();
-  *rval = *this;
-  return rval;
+  return new TurmoilSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -94,9 +92,27 @@ void TurmoilSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect TurmoilSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
+}
+
+// According to https://atariage.com/manual_html_page.php?SoftwareLabelID=571
+// there are 9 different game modes, of increasing speed.
+ModeVect TurmoilSettings::getAvailableModes() {
+  return {0, 1, 2, 3, 4, 5, 6, 7, 8};
+}
+
+void TurmoilSettings::setMode(
+    game_mode_t m, System& system,
+    std::unique_ptr<StellaEnvironmentWrapper> environment) {
+  if (m < 9) {
+    // Press select until the correct mode is reached.
+    while (readRam(&system, 0xea) != m) { environment->pressSelect(2); }
+
+    // Reset the environment to apply changes.
+    environment->softReset();
+  } else {
+    throw std::runtime_error("This game mode is not supported.");
+  }
 }
 
 }  // namespace ale

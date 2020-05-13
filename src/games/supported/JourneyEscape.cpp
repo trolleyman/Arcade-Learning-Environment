@@ -22,9 +22,7 @@ JourneyEscapeSettings::JourneyEscapeSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* JourneyEscapeSettings::clone() const {
-  RomSettings* rval = new JourneyEscapeSettings();
-  *rval = *this;
-  return rval;
+  return new JourneyEscapeSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -96,14 +94,11 @@ void JourneyEscapeSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect JourneyEscapeSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
 }
 
 DifficultyVect JourneyEscapeSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

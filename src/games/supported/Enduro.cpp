@@ -12,6 +12,8 @@
 
 #include "Enduro.hpp"
 
+#include <cassert>
+
 #include "../RomUtils.hpp"
 
 namespace ale {
@@ -20,9 +22,7 @@ EnduroSettings::EnduroSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* EnduroSettings::clone() const {
-  RomSettings* rval = new EnduroSettings();
-  *rval = *this;
-  return rval;
+  return new EnduroSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -103,9 +103,7 @@ void EnduroSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect EnduroSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
 }
 
 }  // namespace ale

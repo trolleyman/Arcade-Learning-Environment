@@ -35,9 +35,7 @@ AsteroidsSettings::AsteroidsSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* AsteroidsSettings::clone() const {
-  RomSettings* rval = new AsteroidsSettings();
-  *rval = *this;
-  return rval;
+  return new AsteroidsSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -144,8 +142,7 @@ void AsteroidsSettings::setMode(
 }
 
 DifficultyVect AsteroidsSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 3};
-  return diff;
+  return {0, 3};
 }
 
 }  // namespace ale

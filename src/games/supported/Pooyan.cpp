@@ -35,9 +35,7 @@ PooyanSettings::PooyanSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* PooyanSettings::clone() const {
-  RomSettings* rval = new PooyanSettings();
-  *rval = *this;
-  return rval;
+  return new PooyanSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -103,8 +101,7 @@ void PooyanSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect PooyanSettings::getAvailableModes() {
-  ModeVect modes = {0x0A, 0x1E, 0x32, 0x46};
-  return modes;
+  return {0x0A, 0x1E, 0x32, 0x46};
 }
 
 // set the mode of the game

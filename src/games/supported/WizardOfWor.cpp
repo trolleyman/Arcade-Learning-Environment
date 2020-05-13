@@ -36,9 +36,7 @@ WizardOfWorSettings::WizardOfWorSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* WizardOfWorSettings::clone() const {
-  RomSettings* rval = new WizardOfWorSettings();
-  *rval = *this;
-  return rval;
+  return new WizardOfWorSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -114,8 +112,7 @@ void WizardOfWorSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect WizardOfWorSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

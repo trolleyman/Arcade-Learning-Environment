@@ -35,9 +35,7 @@ GopherSettings::GopherSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* GopherSettings::clone() const {
-  RomSettings* rval = new GopherSettings();
-  *rval = *this;
-  return rval;
+  return new GopherSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -105,15 +103,12 @@ void GopherSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect GopherSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
 }
 
 // returns a list of mode that the game can be played in
 ModeVect GopherSettings::getAvailableModes() {
-  ModeVect modes = {0, 2};
-  return modes;
+  return {0, 2};
 }
 
 // set the mode of the game
@@ -138,8 +133,7 @@ void GopherSettings::setMode(
 }
 
 DifficultyVect GopherSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

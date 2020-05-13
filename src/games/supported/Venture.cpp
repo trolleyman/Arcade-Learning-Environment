@@ -35,9 +35,7 @@ VentureSettings::VentureSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* VentureSettings::clone() const {
-  RomSettings* rval = new VentureSettings();
-  *rval = *this;
-  return rval;
+  return new VentureSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -116,8 +114,7 @@ void VentureSettings::loadState(Deserializer& ser) {
 }
 
 DifficultyVect VentureSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1, 2, 3};
-  return diff;
+  return {0, 1, 2, 3};
 }
 
 }  // namespace ale

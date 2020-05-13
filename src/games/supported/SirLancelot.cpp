@@ -20,9 +20,7 @@ SirLancelotSettings::SirLancelotSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* SirLancelotSettings::clone() const {
-  RomSettings* rval = new SirLancelotSettings();
-  *rval = *this;
-  return rval;
+  return new SirLancelotSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -84,10 +82,7 @@ void SirLancelotSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect SirLancelotSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(RESET);
-  startingActions.push_back(PLAYER_A_LEFT);
-  return startingActions;
+  return {RESET, PLAYER_A_LEFT};
 }
 
 }  // namespace ale

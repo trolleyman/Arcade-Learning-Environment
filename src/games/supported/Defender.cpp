@@ -35,9 +35,7 @@ DefenderSettings::DefenderSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* DefenderSettings::clone() const {
-  RomSettings* rval = new DefenderSettings();
-  *rval = *this;
-  return rval;
+  return new DefenderSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -151,8 +149,7 @@ void DefenderSettings::setMode(
 }
 
 DifficultyVect DefenderSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

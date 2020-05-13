@@ -20,9 +20,7 @@ FroggerSettings::FroggerSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* FroggerSettings::clone() const {
-  RomSettings* rval = new FroggerSettings();
-  *rval = *this;
-  return rval;
+  return new FroggerSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -82,10 +80,40 @@ void FroggerSettings::loadState(Deserializer& ser) {
   m_lives = ser.getInt();
 }
 
-ActionVect FroggerSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(RESET);
-  return startingActions;
+// According to https://atariage.com/manual_html_page.php?SoftwareLabelID=194
+// there are six variations of the game with three being for one player only.
+// The game mode are described as easiest, more difficult and "speedy Frogger".
+ModeVect FroggerSettings::getAvailableModes() {
+  return {0, 1, 2};
+}
+
+void FroggerSettings::setMode(
+    game_mode_t m, System& system,
+    std::unique_ptr<StellaEnvironmentWrapper> environment) {
+  if (m < 3) {
+    // Read the mode we are currently in.
+    int mode = readRam(&system, 0xdd);
+    // Skip even numbered modes as these are for two players.
+    int desired_mode = 1 + m * 2;
+
+    // Press select until the correct mode is reached for single player only.
+    while (mode != desired_mode) {
+      environment->pressSelect(2);
+      mode = readRam(&system, 0xdd);
+    }
+
+    // Reset the environment to apply changes.
+    environment->softReset();
+  } else {
+    throw std::runtime_error("This game mode is not supported.");
+  }
+}
+
+// According to https://atariage.com/manual_html_page.php?SoftwareLabelID=194
+// the left difficulty switch sets whether the player loses a life when carried
+// off screen on a floating object, or whether they reappear on the other side.
+DifficultyVect FroggerSettings::getAvailableDifficulties() {
+  return {0, 1};
 }
 
 }  // namespace ale

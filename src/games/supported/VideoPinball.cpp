@@ -35,9 +35,7 @@ VideoPinballSettings::VideoPinballSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* VideoPinballSettings::clone() const {
-  RomSettings* rval = new VideoPinballSettings();
-  *rval = *this;
-  return rval;
+  return new VideoPinballSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -110,8 +108,7 @@ void VideoPinballSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect VideoPinballSettings::getAvailableModes() {
-  ModeVect modes = {0, 2};
-  return modes;
+  return {0, 2};
 }
 
 // set the mode of the game
@@ -135,8 +132,7 @@ void VideoPinballSettings::setMode(
 }
 
 DifficultyVect VideoPinballSettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale

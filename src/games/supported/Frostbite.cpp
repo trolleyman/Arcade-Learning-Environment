@@ -35,9 +35,7 @@ FrostbiteSettings::FrostbiteSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* FrostbiteSettings::clone() const {
-  RomSettings* rval = new FrostbiteSettings();
-  *rval = *this;
-  return rval;
+  return new FrostbiteSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -117,8 +115,7 @@ void FrostbiteSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect FrostbiteSettings::getAvailableModes() {
-  ModeVect modes = {0, 2};
-  return modes;
+  return {0, 2};
 }
 
 // set the mode of the game

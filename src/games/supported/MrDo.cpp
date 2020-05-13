@@ -20,9 +20,7 @@ MrDoSettings::MrDoSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* MrDoSettings::clone() const {
-  RomSettings* rval = new MrDoSettings();
-  *rval = *this;
-  return rval;
+  return new MrDoSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -89,9 +87,27 @@ void MrDoSettings::loadState(Deserializer& ser) {
 }
 
 ActionVect MrDoSettings::getStartingActions() {
-  ActionVect startingActions;
-  startingActions.push_back(PLAYER_A_FIRE);
-  return startingActions;
+  return {PLAYER_A_FIRE};
+}
+
+// According to https://atariage.com/manual_html_page.php?SoftwareLabelID=318
+// there are four game modes of increasing difficulty.
+ModeVect MrDoSettings::getAvailableModes() {
+  return {0, 1, 2, 3};
+}
+
+void MrDoSettings::setMode(
+    game_mode_t m, System& system,
+    std::unique_ptr<StellaEnvironmentWrapper> environment) {
+  if (m < 4) {
+    // Press select until the correct mode is reached.
+    while (readRam(&system, 0x80) != m) { environment->pressSelect(5); }
+
+    // Reset the environment to apply changes.
+    environment->softReset();
+  } else {
+    throw std::runtime_error("This game mode is not supported.");
+  }
 }
 
 }  // namespace ale

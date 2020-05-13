@@ -35,9 +35,7 @@ CentipedeSettings::CentipedeSettings() { reset(); }
 
 /* create a new instance of the rom */
 RomSettings* CentipedeSettings::clone() const {
-  RomSettings* rval = new CentipedeSettings();
-  *rval = *this;
-  return rval;
+  return new CentipedeSettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -118,8 +116,7 @@ void CentipedeSettings::loadState(Deserializer& ser) {
 
 // returns a list of mode that the game can be played in
 ModeVect CentipedeSettings::getAvailableModes() {
-  ModeVect modes = {0x16, 0x56};
-  return modes;
+  return {0x16, 0x56};
 }
 
 // set the mode of the game

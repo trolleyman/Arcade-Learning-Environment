@@ -26,9 +26,7 @@ FreewaySettings::FreewaySettings() {
 
 /* create a new instance of the rom */
 RomSettings* FreewaySettings::clone() const {
-  RomSettings* rval = new FreewaySettings();
-  *rval = *this;
-  return rval;
+  return new FreewaySettings(*this);
 }
 
 /* process the latest information from ALE */
@@ -116,8 +114,7 @@ void FreewaySettings::setMode(
 }
 
 DifficultyVect FreewaySettings::getAvailableDifficulties() {
-  DifficultyVect diff = {0, 1};
-  return diff;
+  return {0, 1};
 }
 
 }  // namespace ale
